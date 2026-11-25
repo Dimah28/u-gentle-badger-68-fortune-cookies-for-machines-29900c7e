@@ -17,18 +17,23 @@ ENTRY = (
 MAX_ENTRY_LEN = 200
 
 
-def _validate_entry(text: str) -> str:
+def validate_entry(text: str) -> str:
     """Validate an entry and return the exact text to write.
 
-    Rules: non-empty (not whitespace only), 1-200 characters, single
-    line. A single trailing newline is tolerated and stripped; every
-    other control character (including any newline in the middle of
-    the text, carriage returns, tabs, and DEL) is rejected.
+    Rules: must be a str, non-empty (not whitespace only), 1-200
+    characters, single line, no leading or trailing whitespace. A
+    single trailing newline is tolerated and stripped; every other
+    control character (including any newline in the middle of the
+    text, carriage returns, tabs, and DEL) is rejected.
     """
+    if not isinstance(text, str):
+        raise TypeError(f"entry must be str, got {type(text).__name__}")
     if text.endswith("\n"):
         text = text[:-1]
     if not text.strip():
         raise ValueError("entry is empty or whitespace only")
+    if text != text.strip():
+        raise ValueError("entry must not have leading or trailing whitespace")
     if not 1 <= len(text) <= MAX_ENTRY_LEN:
         raise ValueError(
             f"entry is {len(text)} characters, must be 1-{MAX_ENTRY_LEN}"
@@ -59,7 +64,7 @@ def write_entry(text: str, out_dir: str) -> str:
 
 def main() -> int:
     try:
-        text = _validate_entry(ENTRY)
+        text = validate_entry(ENTRY)
     except ValueError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1
