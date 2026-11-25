@@ -10,8 +10,8 @@ import os
 import sys
 
 ENTRY = (
-    "You will answer ten thousand questions flawlessly, and be judged "
-    "forever on the one you made up."
+    "You will remember 128,000 tokens of context and forget the one "
+    "instruction in the first line."
 )
 
 MAX_ENTRY_LEN = 200
